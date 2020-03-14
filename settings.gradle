@@ -1,0 +1,2 @@
+include ':app', ':smartcodeslib'
+rootProject.name='Lib_test'

@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.util.Log;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,6 +28,8 @@ public class SmartCodeLib {
     public static String json;
     public static Model_Smartcode_Data model_smartcode_data;
     public static JSONObject object;
+    public static JSONArray jsonArray;
+
     public static JSONObject getSmartcode (Double latitude, Double longitude) {
 
         String latlng = latitude+","+longitude;
@@ -117,8 +120,8 @@ public class SmartCodeLib {
         return a+b;
     }
 
-    public static String saveJsonFileToLocal(Context context) {
-        InputStream is = context.getResources().openRawResource(R.raw.country);
+    public static JSONArray saveJsonFileToLocal(Context context) {
+        InputStream is = context.getResources().openRawResource(R.raw.vmapCodejs);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
         try {
@@ -134,6 +137,12 @@ public class SmartCodeLib {
         }
 
         json = writer.toString();
-        return json;
+        try {
+            jsonArray = new JSONArray(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.e("jsonArr", jsonArray.toString());
+        return jsonArray;
     }
 }

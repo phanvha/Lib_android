@@ -167,14 +167,13 @@ public class SmartCodeLib {
                 String maTinh = jb.getString("maTinh");
                 String tenHuyen = jb.getString("tenHuyen");
                 String tenTinh = jb.getString("tenTinh");
-                Log.e("code", code+"");
+                //Log.e("code", code+"");
                 model_vmapCode_jsons.add(new Model_vmapCode_Json(id, address, code, doiTuongGanMa, isDeleted, latitude, longitude, maBuuChinh, maHuyen, maTinh, tenHuyen, tenTinh));
-
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-
+        db = SQLite.getInstance(context);
         if (db.getCountTotalListVmapCodeTB()!=0) {
             if (model_vmapCode_jsons != null) {
                 db = SQLite.getInstance(context);
@@ -198,7 +197,7 @@ public class SmartCodeLib {
         }else{
             Log.e("SQLite:", "Data exist!");
         }
-        Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");
+        //Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");
     }
 
     public static int countAllDataFromSQLite(Context context){

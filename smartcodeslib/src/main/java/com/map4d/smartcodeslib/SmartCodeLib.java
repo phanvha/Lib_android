@@ -148,6 +148,7 @@ public class SmartCodeLib {
 
         return jsonArray;
     }
+
     public static void saveJsonToSQLite(Context context){
         try {
             JSONArray jsonArray = parseJsonArray(context);
@@ -172,8 +173,9 @@ public class SmartCodeLib {
             e.printStackTrace();
         }
 
-        db = SQLite.getInstance(context);
+
         if (model_vmapCode_jsons!=null){
+            db = SQLite.getInstance(context);
             for (int i = model_vmapCode_jsons.size() - 1; i>=0; --i){
                 db.insertListBusStopTB(new Model_vmapCode_Json(
                         model_vmapCode_jsons.get(i).getId(),
@@ -188,6 +190,7 @@ public class SmartCodeLib {
                         model_vmapCode_jsons.get(i).getMaTinh(),
                         model_vmapCode_jsons.get(i).getTenHuyen(),
                         model_vmapCode_jsons.get(i).getTenTinh()));
+                Log.e("model_vmapCode_jsons", model_vmapCode_jsons.get(i).getCode()+"");
             }
         }
         Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");

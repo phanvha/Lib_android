@@ -1,4 +1,4 @@
-package com.map4d.smartcodeslib;
+package com.map4d.lib_test;
 
 import android.content.ContentValues;
 import android.content.Context;

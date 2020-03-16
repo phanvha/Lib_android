@@ -1,8 +1,6 @@
 package com.map4d.smartcodeslib;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
 
 
@@ -121,7 +119,7 @@ public class SmartCodeLib {
     }
 
     public static JSONArray saveJsonFileToLocal(Context context) {
-        InputStream is = context.getResources().openRawResource(R.raw.vmapCodejs);
+        InputStream is = context.getResources().openRawResource(R.raw.vmapcodejs);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
         try {

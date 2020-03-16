@@ -175,7 +175,7 @@ public class SmartCodeLib {
             e.printStackTrace();
         }
 
-        if (checkData(context)) {
+        if (db.getCountTotalListVmapCodeTB()!=0) {
             if (model_vmapCode_jsons != null) {
                 db = SQLite.getInstance(context);
                 for (int i = model_vmapCode_jsons.size() - 1; i >= 0; --i) {

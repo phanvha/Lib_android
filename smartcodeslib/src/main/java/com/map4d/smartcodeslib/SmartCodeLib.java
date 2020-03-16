@@ -175,25 +175,28 @@ public class SmartCodeLib {
             e.printStackTrace();
         }
 
-
-        if (model_vmapCode_jsons!=null){
-            db = SQLite.getInstance(context);
-            for (int i = model_vmapCode_jsons.size() - 1; i>=0; --i){
-                db.insertListBusStopTB(new Model_vmapCode_Json(
-                        model_vmapCode_jsons.get(i).getId(),
-                        model_vmapCode_jsons.get(i).getAddress(),
-                        model_vmapCode_jsons.get(i).getCode(),
-                        model_vmapCode_jsons.get(i).getDoiTuongGanMa(),
-                        model_vmapCode_jsons.get(i).getDeleted(),
-                        model_vmapCode_jsons.get(i).getLatitude(),
-                        model_vmapCode_jsons.get(i).getLongitude(),
-                        model_vmapCode_jsons.get(i).getMaBuuChinh(),
-                        model_vmapCode_jsons.get(i).getMaHuyen(),
-                        model_vmapCode_jsons.get(i).getMaTinh(),
-                        model_vmapCode_jsons.get(i).getTenHuyen(),
-                        model_vmapCode_jsons.get(i).getTenTinh()));
-                Log.e("model_vmapCode_jsons", model_vmapCode_jsons.get(i).getCode()+"");
+        if (checkData(context)) {
+            if (model_vmapCode_jsons != null) {
+                db = SQLite.getInstance(context);
+                for (int i = model_vmapCode_jsons.size() - 1; i >= 0; --i) {
+                    db.insertListBusStopTB(new Model_vmapCode_Json(
+                            model_vmapCode_jsons.get(i).getId(),
+                            model_vmapCode_jsons.get(i).getAddress(),
+                            model_vmapCode_jsons.get(i).getCode(),
+                            model_vmapCode_jsons.get(i).getDoiTuongGanMa(),
+                            model_vmapCode_jsons.get(i).getDeleted(),
+                            model_vmapCode_jsons.get(i).getLatitude(),
+                            model_vmapCode_jsons.get(i).getLongitude(),
+                            model_vmapCode_jsons.get(i).getMaBuuChinh(),
+                            model_vmapCode_jsons.get(i).getMaHuyen(),
+                            model_vmapCode_jsons.get(i).getMaTinh(),
+                            model_vmapCode_jsons.get(i).getTenHuyen(),
+                            model_vmapCode_jsons.get(i).getTenTinh()));
+                    Log.e("model_vmapCode_jsons", model_vmapCode_jsons.get(i).getCode() + "");
+                }
             }
+        }else{
+            Log.e("SQLite:", "Data exist!");
         }
         Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");
     }
@@ -238,7 +241,7 @@ public class SmartCodeLib {
         return jsonArray;
     }
     public static Boolean checkData(Context context){
-        Boolean count = false;
+        boolean count = false;
         db = SQLite.getInstance(context);
         if (db.getCountTotalListVmapCodeTB()!=0){
             count = true;

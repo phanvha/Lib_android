@@ -210,13 +210,15 @@ public class SmartCodeLib {
         }
         return count;
     }
-    public static JSONArray getAllDataFromSQLite(Context context) {
+    public static String getAllDataFromSQLite(Context context) {
+        String data = "";
         try {
             db = SQLite.getInstance(context);
 
             jsonArray = new JSONArray();
             model_vmapCode_jsons = new ArrayList<>();
             model_vmapCode_jsons = db.getAll();
+            data = model_vmapCode_jsons.get(2).getAddress();
             for (int i = model_vmapCode_jsons.size() - 1;i>=0;--i){
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", model_vmapCode_jsons.get(i).getId());
@@ -238,7 +240,7 @@ public class SmartCodeLib {
         }
         Log.e("jsonArr", jsonArray.toString());
 
-        return jsonArray;
+        return data;
     }
     public static Boolean checkData(Context context){
         boolean count = false;

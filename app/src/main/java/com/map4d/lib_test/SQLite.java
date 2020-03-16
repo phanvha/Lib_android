@@ -116,7 +116,7 @@ public class SQLite extends SQLiteOpenHelper {
 //        return words;
 //    }
 
-    public List<Model_vmapCode_Json> getAll() {
+    public List<Model_vmapCode_Json> getAllDataInSQLite() {
         SQLiteDatabase db = getReadableDatabase();
         List<Model_vmapCode_Json> words = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_VMAPCODE;
@@ -167,24 +167,6 @@ public class SQLite extends SQLiteOpenHelper {
 //        return words;
 //    }
 //
-//    //get total bus stop
-//    public int getCountTotalListBusStopTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        String sql = "SELECT * FROM " + TABLE_LIST_BUS_STOP;
-//        Cursor cursor = db.rawQuery(sql, null);
-//        int totalRows = cursor.getCount();
-//        cursor.close();
-//        return totalRows;
-//    }
-//    //get total route
-//    public int getCountTotalListRouteFindDataTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        String sql = "SELECT * FROM " + TABLE_LIST_ROUTE_FIND_DATA;
-//        Cursor cursor = db.rawQuery(sql, null);
-//        int totalRows = cursor.getCount();
-//        cursor.close();
-//        return totalRows;
-//    }
 //    //get total row of routedetail_1 table
 //    public int getTotalListRouteTB() {
 //        SQLiteDatabase db = getReadableDatabase();
@@ -222,12 +204,12 @@ public class SQLite extends SQLiteOpenHelper {
 ////        return rowEffect;
 ////    }
 ////
-//    public int deleteListBusStopTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        int rowEffect = db.delete(TABLE_LIST_BUS_STOP, null, null);
-//        db.close();
-//        return rowEffect;
-//    }
+    public int deleteTableVmapCode() {
+        SQLiteDatabase db = getReadableDatabase();
+        int rowEffect = db.delete(TABLE_VMAPCODE, null, null);
+        db.close();
+        return rowEffect;
+    }
 //    public int deleteVersionTB(){
 //        SQLiteDatabase db = getReadableDatabase();
 //        int rowEffect = db.delete(TABLE_VERSION, null,null);

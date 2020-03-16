@@ -16,6 +16,8 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,8 +27,10 @@ public class SmartCodeLib {
     public static Context context;
     public static String json;
     public static Model_Smartcode_Data model_smartcode_data;
+    public static List<Model_vmapCode_Json> model_vmapCode_jsons = new ArrayList<>();
     public static JSONObject object;
     public static JSONArray jsonArray;
+    public static SQLite db;
 
     public static JSONObject getSmartcode (Double latitude, Double longitude) {
 
@@ -118,7 +122,7 @@ public class SmartCodeLib {
         return a+b;
     }
 
-    public static JSONArray saveJsonFileToLocal(Context context) {
+    public static JSONArray parseJsonArray(Context context) {
         InputStream is = context.getResources().openRawResource(R.raw.vmapcodejs);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
@@ -141,6 +145,52 @@ public class SmartCodeLib {
             e.printStackTrace();
         }
         Log.e("jsonArr", jsonArray.toString());
+
         return jsonArray;
     }
+    public static void saveJsonToSQLite(Context context){
+        try {
+            JSONArray jsonArray = parseJsonArray(context);
+            for (int i = 0 ; i<=jsonArray.length(); i++){
+                JSONObject jb = jsonArray.getJSONObject(i);
+                String id = jb.getString("id");
+                String address = jb.getString("address");
+                String code = jb.getString("code");
+                String doiTuongGanMa = jb.getString("doiTuongGanMa");
+                String isDeleted = jb.getString("isDeleted");
+                Double latitude = jb.getDouble("latitude");
+                Double longitude = jb.getDouble("longitude");
+                String maBuuChinh = jb.getString("maBuuChinh");
+                String maHuyen = jb.getString("maHuyen");
+                String maTinh = jb.getString("maTinh");
+                String tenHuyen = jb.getString("tenHuyen");
+                String tenTinh = jb.getString("tenTinh");
+                model_vmapCode_jsons.add(new Model_vmapCode_Json(id, address, code, doiTuongGanMa, isDeleted, latitude, longitude, maBuuChinh, maHuyen, maTinh, tenHuyen, tenTinh));
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        db = SQLite.getInstance(context);
+        if (model_vmapCode_jsons!=null){
+            for (int i = model_vmapCode_jsons.size() - 1; i>=0; --i){
+                db.insertListBusStopTB(new Model_vmapCode_Json(
+                        model_vmapCode_jsons.get(i).getId(),
+                        model_vmapCode_jsons.get(i).getAddress(),
+                        model_vmapCode_jsons.get(i).getCode(),
+                        model_vmapCode_jsons.get(i).getDoiTuongGanMa(),
+                        model_vmapCode_jsons.get(i).getDeleted(),
+                        model_vmapCode_jsons.get(i).getLatitude(),
+                        model_vmapCode_jsons.get(i).getLongitude(),
+                        model_vmapCode_jsons.get(i).getMaBuuChinh(),
+                        model_vmapCode_jsons.get(i).getMaHuyen(),
+                        model_vmapCode_jsons.get(i).getMaTinh(),
+                        model_vmapCode_jsons.get(i).getTenHuyen(),
+                        model_vmapCode_jsons.get(i).getTenTinh()));
+            }
+        }
+        Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");
+    }
+
 }

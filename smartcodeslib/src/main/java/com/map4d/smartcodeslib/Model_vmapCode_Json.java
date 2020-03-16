@@ -12,7 +12,7 @@ public class Model_vmapCode_Json {
     @SerializedName("doiTuongGanMa")
     private String doiTuongGanMa;
     @SerializedName("isDeleted")
-    private Boolean isDeleted;
+    private String isDeleted;
     @SerializedName("latitude")
     private Double latitude;
     @SerializedName("longitude")
@@ -28,7 +28,7 @@ public class Model_vmapCode_Json {
     @SerializedName("tenTinh")
     private String tenTinh;
 
-    public Model_vmapCode_Json(String id, String address, String code, String doiTuongGanMa, Boolean isDeleted, Double latitude, Double longitude, String maBuuChinh, String maHuyen, String maTinh, String tenHuyen, String tenTinh) {
+    public Model_vmapCode_Json(String id, String address, String code, String doiTuongGanMa, String isDeleted, Double latitude, Double longitude, String maBuuChinh, String maHuyen, String maTinh, String tenHuyen, String tenTinh) {
         this.id = id;
         this.address = address;
         this.code = code;
@@ -75,11 +75,11 @@ public class Model_vmapCode_Json {
         this.doiTuongGanMa = doiTuongGanMa;
     }
 
-    public Boolean getDeleted() {
+    public String getDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(String deleted) {
         isDeleted = deleted;
     }
 

@@ -26,6 +26,7 @@ import retrofit2.Response;
 public class SmartCodeLib {
     public static Context context;
     public static String json;
+    public static int count;
     public static Model_Smartcode_Data model_smartcode_data;
     public static List<Model_vmapCode_Json> model_vmapCode_jsons = new ArrayList<>();
     public static JSONObject object;
@@ -166,6 +167,7 @@ public class SmartCodeLib {
                 String maTinh = jb.getString("maTinh");
                 String tenHuyen = jb.getString("tenHuyen");
                 String tenTinh = jb.getString("tenTinh");
+                Log.e("code", code+"");
                 model_vmapCode_jsons.add(new Model_vmapCode_Json(id, address, code, doiTuongGanMa, isDeleted, latitude, longitude, maBuuChinh, maHuyen, maTinh, tenHuyen, tenTinh));
 
             }
@@ -194,6 +196,16 @@ public class SmartCodeLib {
             }
         }
         Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");
+    }
+
+    public static int countAll(Context context){
+
+        db = SQLite.getInstance(context);
+        if (db.getCountTotalListVmapCodeTB()!=0){
+            count =  db.getCountTotalListVmapCodeTB();
+
+        }
+        return count;
     }
 
 }

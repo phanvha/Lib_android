@@ -198,7 +198,7 @@ public class SmartCodeLib {
         Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");
     }
 
-    public static int countAll(Context context){
+    public static int countAllDataFromSQLite(Context context){
 
         db = SQLite.getInstance(context);
         if (db.getCountTotalListVmapCodeTB()!=0){
@@ -207,5 +207,36 @@ public class SmartCodeLib {
         }
         return count;
     }
+    public static JSONArray getAllDataFromSQLite(Context context) {
+        try {
+            db = SQLite.getInstance(context);
+
+            jsonArray = new JSONArray();
+            model_vmapCode_jsons = new ArrayList<>();
+            model_vmapCode_jsons = db.getAll();
+            for (int i = model_vmapCode_jsons.size() - 1;i>=0;--i){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", model_vmapCode_jsons.get(i).getId());
+                jsonObject.put("address", model_vmapCode_jsons.get(i).getAddress());
+                jsonObject.put("code", model_vmapCode_jsons.get(i).getAddress());
+                jsonObject.put("doiTuongGanMa", model_vmapCode_jsons.get(i).getDoiTuongGanMa());
+                jsonObject.put("isDeleted", model_vmapCode_jsons.get(i).getDeleted());
+                jsonObject.put("latitude", model_vmapCode_jsons.get(i).getLatitude());
+                jsonObject.put("longitude", model_vmapCode_jsons.get(i).getLongitude());
+                jsonObject.put("maBuuChinh", model_vmapCode_jsons.get(i).getMaBuuChinh());
+                jsonObject.put("maHuyen", model_vmapCode_jsons.get(i).getMaHuyen());
+                jsonObject.put("maTinh", model_vmapCode_jsons.get(i).getMaTinh());
+                jsonObject.put("tenHuyen", model_vmapCode_jsons.get(i).getTenHuyen());
+                jsonObject.put("tenTinh", model_vmapCode_jsons.get(i).getTenTinh());
+                jsonArray.put(jsonObject);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Log.e("jsonArr", jsonArray.toString());
+
+        return jsonArray;
+    }
+
 
 }

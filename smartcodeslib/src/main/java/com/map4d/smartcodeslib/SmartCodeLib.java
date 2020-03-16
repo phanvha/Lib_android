@@ -237,6 +237,14 @@ public class SmartCodeLib {
 
         return jsonArray;
     }
+    public static Boolean checkData(Context context){
+        Boolean count = false;
+        db = SQLite.getInstance(context);
+        if (db.getCountTotalListVmapCodeTB()!=0){
+            count = true;
+        }
+        return count;
+    }
 
 
 }

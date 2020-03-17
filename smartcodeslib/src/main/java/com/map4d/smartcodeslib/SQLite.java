@@ -164,8 +164,8 @@ public class SQLite extends SQLiteOpenHelper {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            jsonArray.put(jsonObject);
         }
-        jsonArray.put(jsonObject);
         db.close();
         return jsonArray;
     }

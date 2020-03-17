@@ -24,14 +24,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SmartCodeLib {
-    public static Context context;
-    public static String json, code;
-    public static int count;
-    public static Model_Smartcode_Data model_smartcode_data;
-    public static List<Model_vmapCode_Json> model_vmapCode_jsons = new ArrayList<>();
-    public static JSONObject object, jsonObject;
-    public static JSONArray jsonArray, data;
-    public static SQLite db;
+    private static Context context;
+    private static String json, code;
+    private static int count;
+    private static Model_Smartcode_Data model_smartcode_data;
+    private static List<Model_vmapCode_Json> model_vmapCode_jsons = new ArrayList<>();
+    private static JSONObject object, jsonObject;
+    private static JSONArray jsonArray, data;
+    private static SQLite db;
 
     public static JSONObject getSmartcode (Double latitude, Double longitude) {
 
@@ -119,11 +119,8 @@ public class SmartCodeLib {
         });
         return object;
     }
-    public static int x(int a, int b){
-        return a+b;
-    }
 
-    public static JSONArray parseJsonArray(Context context) {
+    private static JSONArray parseJsonArray(Context context) {
         InputStream is = context.getResources().openRawResource(R.raw.vmapcodejs);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
@@ -179,7 +176,7 @@ public class SmartCodeLib {
             if (model_vmapCode_jsons != null) {
                 db = SQLite.getInstance(context);
                 for (int i = model_vmapCode_jsons.size() - 1; i >= 0; --i) {
-                    db.insertListBusStopTB(new Model_vmapCode_Json(
+                    db.insertDataToVmapTable(new Model_vmapCode_Json(
                             model_vmapCode_jsons.get(i).getId(),
                             model_vmapCode_jsons.get(i).getAddress(),
                             model_vmapCode_jsons.get(i).getCode(),
@@ -201,12 +198,11 @@ public class SmartCodeLib {
         //Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");
     }
 
-    public static int countAllDataFromSQLite(Context context){
+    public static int countAllDataFromVmapCodeTable(Context context){
 
         db = SQLite.getInstance(context);
         if (db.getCountTotalListVmapCodeTB()!=0){
             count =  db.getCountTotalListVmapCodeTB();
-
         }
         return count;
     }
@@ -218,7 +214,7 @@ public class SmartCodeLib {
             model_vmapCode_jsons = new ArrayList<>();
             if (db.getCountTotalListVmapCodeTB() != 0) {
                 //Log.d("dữ liệu", db.getCountTotalListVmapCodeTB() + "");
-                jsonArray = db.getAll();
+                jsonArray = db.getALLDataFromVmapCodeTable();
                 Log.e("Dữ liệu", ""+jsonArray.toString());
             } else {
                 Log.e("Du lieu", "nulll");
@@ -228,7 +224,7 @@ public class SmartCodeLib {
         }
         return jsonArray;
     }
-        public static Boolean checkData(Context context){
+    private static Boolean checkData(Context context){
         boolean count = false;
         db = SQLite.getInstance(context);
         if (db.getCountTotalListVmapCodeTB()!=0){

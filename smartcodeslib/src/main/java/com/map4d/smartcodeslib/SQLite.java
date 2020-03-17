@@ -72,8 +72,9 @@ public class SQLite extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_VMAPCODE);
         onCreate(db);
     }
-
-    public boolean insertListBusStopTB(Model_vmapCode_Json data) {
+    //vmapCode Table
+    //insert
+    public boolean insertDataToVmapTable(Model_vmapCode_Json data) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ID, data.getId());
@@ -94,7 +95,7 @@ public class SQLite extends SQLiteOpenHelper {
             return true;
         return false;
     }
-    //get total
+    //count
     public int getCountTotalListVmapCodeTB() {
         SQLiteDatabase db = getReadableDatabase();
         String sql = "SELECT * FROM " + TABLE_VMAPCODE;
@@ -103,24 +104,8 @@ public class SQLite extends SQLiteOpenHelper {
         cursor.close();
         return totalRows;
     }
-
-//    public MetaVersion getVer() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        MetaVersion words = new MetaVersion();
-//        String sql = "SELECT * FROM " + TABLE_VERSION;
-//        Cursor cursor = db.rawQuery(sql, null);
-//        if (cursor != null && cursor.moveToFirst()) {
-//            do {
-//                words = new MetaVersion(cursor.getString(1),cursor.getInt(2), cursor.getString(3),cursor.getString(4));
-//            } while (cursor.moveToNext());
-//            cursor.close();
-//        }
-//
-//        db.close();
-//        return words;
-//    }
-
-    public JSONArray getAll() {
+    //get data jsonArray
+    public JSONArray getALLDataFromVmapCodeTable() {
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         SQLiteDatabase db = getReadableDatabase();
@@ -169,129 +154,16 @@ public class SQLite extends SQLiteOpenHelper {
         db.close();
         return jsonArray;
     }
+    //delete
+    public int deleteVmapCodeTable() {
+        SQLiteDatabase db = getReadableDatabase();
+        int rowEffect = db.delete(TABLE_VMAPCODE, null, null);
+        db.close();
+        return rowEffect;
+    }
 
-//    //get all data version
-//    public List<MetaVersion> getAllInDataVersionTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        List<MetaVersion> words = new ArrayList<>();
-//        String sql = "SELECT * FROM " + TABLE_VERSION;
-//        Cursor cursor = db.rawQuery(sql, null);
-//        if (cursor != null && cursor.moveToFirst()) {
-//            do {
-//                words.add(new MetaVersion(
-//                        cursor.getString(1),
-//                        cursor.getInt(2),
-//                        cursor.getString(3),
-//                        cursor.getString(4)
-//                ));
-//            } while (cursor.moveToNext());
-//            cursor.close();
-//        }
-//
-//        db.close();
-//        return words;
-//    }
-//
-//    //get total bus stop
-//    public int getCountTotalListBusStopTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        String sql = "SELECT * FROM " + TABLE_LIST_BUS_STOP;
-//        Cursor cursor = db.rawQuery(sql, null);
-//        int totalRows = cursor.getCount();
-//        cursor.close();
-//        return totalRows;
-//    }
-//    //get total route
-//    public int getCountTotalListRouteFindDataTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        String sql = "SELECT * FROM " + TABLE_LIST_ROUTE_FIND_DATA;
-//        Cursor cursor = db.rawQuery(sql, null);
-//        int totalRows = cursor.getCount();
-//        cursor.close();
-//        return totalRows;
-//    }
-//    //get total row of routedetail_1 table
-//    public int getTotalListRouteTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        String sql = "SELECT * FROM " + TABLE_LIST_ROUTE;
-//        Cursor cursor = db.rawQuery(sql, null);
-//        int totalRows = cursor.getCount();
-//        cursor.close();
-//        return totalRows;
-//    }
-//
-//    //get total routedetail_2
-//    public int getTotalListBusOnRouteTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        String sql = "SELECT * FROM " + TABLE_LIST_BUS_STOP_ON_ROUTE;
-//        Cursor cursor = db.rawQuery(sql, null);
-//        int totalRows = cursor.getCount();
-//        cursor.close();
-//        return totalRows;
-//    }
-//    //get total data version
-//    public int getTotalVersionTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        String sql = "SELECT * FROM " + TABLE_VERSION;
-//        Cursor cursor = db.rawQuery(sql, null);
-//        int totalRows = cursor.getCount();
-//        cursor.close();
-//        return totalRows;
-//    }
-//    //        public int updateVersion(Data data) {
-////        SQLiteDatabase db = getWritableDatabase();
-////        ContentValues values = new ContentValues();
-////        values.put(ID_COLUMN, data.getId());
-////        int rowEffect = db.update(TABLE_POLYGON, values, ID_COLUMN + " = ?", new String[]{data.getName()});
-////        db.close();
-////        return rowEffect;
-////    }
-////
-//    public int deleteListBusStopTB() {
-//        SQLiteDatabase db = getReadableDatabase();
-//        int rowEffect = db.delete(TABLE_LIST_BUS_STOP, null, null);
-//        db.close();
-//        return rowEffect;
-//    }
-//    public int deleteVersionTB(){
-//        SQLiteDatabase db = getReadableDatabase();
-//        int rowEffect = db.delete(TABLE_VERSION, null,null);
-//        db.close();
-//        return rowEffect;
-//    }
-//    public int deleteListRouteFindDataTB(){
-//        SQLiteDatabase db = getReadableDatabase();
-//        int rowEffect = db.delete(TABLE_LIST_ROUTE_FIND_DATA, null,null);
-//        db.close();
-//        return rowEffect;
-//    }
-//    public int deleteRouteTB(){
-//        SQLiteDatabase db = getReadableDatabase();
-//        int rowEffect = db.delete(TABLE_LIST_ROUTE, null,null);
-//        db.close();
-//        return rowEffect;
-//    }
-//    public int deleteListBusOnRouteTB(){
-//        SQLiteDatabase db = getReadableDatabase();
-//        int rowEffect = db.delete(TABLE_LIST_BUS_STOP_ON_ROUTE, null,null);
-//        db.close();
-//        return rowEffect;
-//    }
-//
-//    //VERSION
-//    private boolean insertVersionAPI(VersionAPI data){
-//        SQLiteDatabase db = getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//        values.put(ID_CL, data.getData().id);
-//        values.put(VERSIONDATA_CL, data.getData().VersionData);
-//        values.put(UPDATE_DATE_CL, data.getData().UpdateDate);
-//        values.put(VERSIONDATA_CL, data.getData().VersionApi);
-//        long rowId = db.insert(TABLE_VERSION, null, values);
-//        db.close();
-//        if (rowId != -1)
-//            return true;
-//        return false;
-//    }
+    //Geometry Table
+
 
 
 }

@@ -175,7 +175,7 @@ public class SmartCodeLib {
         }
         db = SQLite.getInstance(context);
         if (db.getCountTotalListVmapCodeTB()==0) {
-            Log.e("total", db.getCountTotalListVmapCodeTB()+"");
+            Log.e("total", model_vmapCode_jsons.size()+"");
             if (model_vmapCode_jsons != null) {
                 db = SQLite.getInstance(context);
                 for (int i = model_vmapCode_jsons.size() - 1; i >= 0; --i) {
@@ -218,6 +218,7 @@ public class SmartCodeLib {
             jsonArray = new JSONArray();
             model_vmapCode_jsons = new ArrayList<>();
             if (db.getCountTotalListVmapCodeTB()!=0){
+                Log.d("dữ liệu", db.getCountTotalListVmapCodeTB()+"");
                 model_vmapCode_jsons = db.getAll();
                 code = model_vmapCode_jsons.get(1).getAddress();
 //                for (int i = model_vmapCode_jsons.size() - 1;i>=0;--i){

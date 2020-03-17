@@ -2,9 +2,13 @@ package com.map4d.lib_test;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.map4d.smartcodeslib.SmartCodeLib;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,17 +40,50 @@ public class MainActivity extends AppCompatActivity {
 
 //        String jsonobject = saveJsonFileToLocal(MainActivity.this).toString();
 //        Log.e("json", jsonobject);
-        saveJsonToSQLite(MainActivity.this);
+        //saveJsonToSQLite(MainActivity.this);
 //        if (db.getCountTotalListVmapCodeTB()!=0){
 //            Log.e("countdb", ""+db.getCountTotalListVmapCodeTB());
 //        }else{
 //            saveJsonToSQLite(MainActivity.this);
 //        }
-        if (model_vmapCode_jsons!=null){
-            Log.e("jj", model_vmapCode_jsons.get(5).getCode()+"");
-        }
+
+
+        new saveJsonFileToLocal().execute();
 
     }
+    class saveJsonFileToLocal extends AsyncTask<Void, Void, String> {
+        // private ProgressDialog dialog;
+        private ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            // This progressbar will load util tast in doInBackground method loads
+            dialog = new ProgressDialog(MainActivity.this);
+            dialog.setMessage("Đang giải nén...");
+            dialog.setCancelable(true);
+            dialog.setTitle("Dữ liệu");
+            dialog.setMax(100);
+            dialog.show();
+
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            SmartCodeLib.saveJsonToSQLite(MainActivity.this);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.e("address",SmartCodeLib.getAllDataFromSQLite(MainActivity.this));
+            dialog.dismiss();
+        }
+    }
+
+
+
+
+
     private JSONArray parseJsonArray(Context context) {
         InputStream is = context.getResources().openRawResource(R.raw.vmapcodejs);
         Writer writer = new StringWriter();

@@ -29,8 +29,8 @@ public class SmartCodeLib {
     public static int count;
     public static Model_Smartcode_Data model_smartcode_data;
     public static List<Model_vmapCode_Json> model_vmapCode_jsons = new ArrayList<>();
-    public static JSONObject object;
-    public static JSONArray jsonArray;
+    public static JSONObject object, jsonObject;
+    public static JSONArray jsonArray, data;
     public static SQLite db;
 
     public static JSONObject getSmartcode (Double latitude, Double longitude) {
@@ -192,7 +192,7 @@ public class SmartCodeLib {
                             model_vmapCode_jsons.get(i).getMaTinh(),
                             model_vmapCode_jsons.get(i).getTenHuyen(),
                             model_vmapCode_jsons.get(i).getTenTinh()));
-                    Log.e("model_vmapCode_jsons", model_vmapCode_jsons.get(i).getCode() + "");
+                    //Log.e("model_vmapCode_jsons", model_vmapCode_jsons.get(i).getCode() + "");
                 }
             }
         }else{
@@ -210,15 +210,14 @@ public class SmartCodeLib {
         }
         return count;
     }
-    public static String getAllDataFromSQLite(Context context) {
-        String data = "";
+    public static JSONArray getAllDataFromSQLite(Context context) {
+
         try {
             db = SQLite.getInstance(context);
-
+            jsonObject = new JSONObject();
             jsonArray = new JSONArray();
             model_vmapCode_jsons = new ArrayList<>();
             model_vmapCode_jsons = db.getAll();
-            data = model_vmapCode_jsons.get(2).getAddress();
             for (int i = model_vmapCode_jsons.size() - 1;i>=0;--i){
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", model_vmapCode_jsons.get(i).getId());
@@ -234,13 +233,14 @@ public class SmartCodeLib {
                 jsonObject.put("tenHuyen", model_vmapCode_jsons.get(i).getTenHuyen());
                 jsonObject.put("tenTinh", model_vmapCode_jsons.get(i).getTenTinh());
                 jsonArray.put(jsonObject);
+                Log.e("jsonArray", jsonArray.toString());
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        Log.e("jsonArr", jsonArray.toString());
+        Log.e("jsonArray", jsonArray.toString());
 
-        return data;
+        return jsonArray;
     }
     public static Boolean checkData(Context context){
         boolean count = false;

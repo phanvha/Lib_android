@@ -219,7 +219,7 @@ public class SmartCodeLib {
             model_vmapCode_jsons = new ArrayList<>();
             if (db.getCountTotalListVmapCodeTB()!=0){
                 model_vmapCode_jsons = db.getAll();
-                code = model_vmapCode_jsons.get(1).getCode();
+                code = model_vmapCode_jsons.get(1).getAddress();
 //                for (int i = model_vmapCode_jsons.size() - 1;i>=0;--i){
 //                    JSONObject jsonObject = new JSONObject();
 //                    jsonObject.put("id", model_vmapCode_jsons.get(i).getId());

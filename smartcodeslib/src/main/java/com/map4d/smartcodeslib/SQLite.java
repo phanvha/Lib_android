@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,8 +120,9 @@ public class SQLite extends SQLiteOpenHelper {
 //        return words;
 //    }
 
-    public String getAll() {
-        String address;
+    public JSONArray getAll() {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
         SQLiteDatabase db = getReadableDatabase();
         List<Model_Table_Vmapcode> words = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_VMAPCODE;
@@ -142,9 +147,27 @@ public class SQLite extends SQLiteOpenHelper {
 
             cursor.close();
         }
-        address = words.get(1).getAddress();
+        for (int i = words.size() -1;i>=0;--i){
+            try {
+                jsonObject.put("id", words.get(i).getId());
+                jsonObject.put("address", words.get(i).getAddress());
+                jsonObject.put("code", words.get(i).getCode());
+                jsonObject.put("doiTuongGanMa", words.get(i).getDoiTuongGanMa());
+                jsonObject.put("isDeleted", words.get(i).getIsDeleted());
+                jsonObject.put("latitude", words.get(i).getLatitude());
+                jsonObject.put("longitude", words.get(i).getLongitude());
+                jsonObject.put("maBuuChinh", words.get(i).getMaBuuChinh());
+                jsonObject.put("maHuyen", words.get(i).getMaHuyen());
+                jsonObject.put("maTinh", words.get(i).getMaTinh());
+                jsonObject.put("tenHuyen", words.get(i).getTenHuyen());
+                jsonObject.put("tenTinh", words.get(i).getTenTinh());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        jsonArray.put(jsonObject);
         db.close();
-        return address;
+        return jsonArray;
     }
 
 //    //get all data version

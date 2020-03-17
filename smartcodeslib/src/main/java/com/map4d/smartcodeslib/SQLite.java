@@ -116,33 +116,35 @@ public class SQLite extends SQLiteOpenHelper {
 //        return words;
 //    }
 
-    public List<Model_vmapCode_Json> getAll() {
+    public String getAll() {
+        String address;
         SQLiteDatabase db = getReadableDatabase();
-        List<Model_vmapCode_Json> words = new ArrayList<>();
+        List<Model_Table_Vmapcode> words = new ArrayList<>();
         String sql = "SELECT * FROM " + TABLE_VMAPCODE;
         Cursor cursor = db.rawQuery(sql, null);
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                words.add(new Model_vmapCode_Json(
+                words.add(new Model_Table_Vmapcode(
+                        cursor.getString(0),
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getString(4),
-                        cursor.getString(5),
+                        cursor.getDouble(5),
                         cursor.getDouble(6),
-                        cursor.getDouble(7),
+                        cursor.getString(7),
                         cursor.getString(8),
                         cursor.getString(9),
                         cursor.getString(10),
-                        cursor.getString(11),
-                        cursor.getString(12)
+                        cursor.getString(11)
                 ));
             } while (cursor.moveToNext());
+
             cursor.close();
         }
-
+        address = words.get(1).getAddress();
         db.close();
-        return words;
+        return address;
     }
 
 //    //get all data version

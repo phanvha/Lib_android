@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.e("address",SmartCodeLib.getAllDataFromSQLite(MainActivity.this));
+            Log.e("address",SmartCodeLib.getAllDataFromSQLite(MainActivity.this)+"");
             dialog.dismiss();
         }
     }

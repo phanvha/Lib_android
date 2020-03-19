@@ -233,7 +233,7 @@ public class SmartCodeLib {
     }
 
     //geomettry table
-    private JSONArray parseJsonArrayWithGeometry(Context context) {
+    private static JSONArray parseJsonArrayWithGeometry(Context context) {
         InputStream is = context.getResources().openRawResource(R.raw.geometry_min);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
@@ -259,14 +259,7 @@ public class SmartCodeLib {
 
         return jsonArray;
     }
-    public static int countAllDataFromGeometryTable(Context context){
-        db = SQLite.getInstance(context);
-        if (db.getCountTotalLisGeometryTB()!=0){
-            count =  db.getCountTotalLisGeometryTB();
-        }
-        return count;
-    }
-    private void saveJsonToGeometry(Context context){
+    public static void saveJsonToGeometryTB(Context context){
         try {
             model_geometry_tbs = new ArrayList<>();
             JSONArray jsonArray = parseJsonArrayWithGeometry(context);
@@ -304,6 +297,13 @@ public class SmartCodeLib {
             Log.e("SQLite:", "Data exist!");
         }
 
+    }
+    public static int countAllDataFromGeometryTable(Context context){
+        db = SQLite.getInstance(context);
+        if (db.getCountTotalLisGeometryTB()!=0){
+            count =  db.getCountTotalLisGeometryTB();
+        }
+        return count;
     }
     public static JSONArray getJsonArrayFromGeometryTable(Context context) {
         try {

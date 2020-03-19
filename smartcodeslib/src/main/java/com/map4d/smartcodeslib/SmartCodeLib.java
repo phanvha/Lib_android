@@ -29,10 +29,11 @@ public class SmartCodeLib {
     private static int count;
     private static Model_Smartcode_Data model_smartcode_data;
     private static List<Model_vmapCode_Json> model_vmapCode_jsons = new ArrayList<>();
+    private static List<Model_Geometry_tb> model_geometry_tbs = new ArrayList<>();
     private static JSONObject object, jsonObject;
     private static JSONArray jsonArray, data;
     private static SQLite db;
-
+    //get smartcodes
     public static JSONObject getSmartcode (Double latitude, Double longitude) {
 
         String latlng = latitude+","+longitude;
@@ -119,8 +120,8 @@ public class SmartCodeLib {
         });
         return object;
     }
-
-    private static JSONArray parseJsonArray(Context context) {
+    //vmapCode Table
+    private static JSONArray parseJsonArrayWithVmapcode(Context context) {
         InputStream is = context.getResources().openRawResource(R.raw.vmapcodejs);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
@@ -146,10 +147,9 @@ public class SmartCodeLib {
 
         return jsonArray;
     }
-
-    public static void saveJsonToSQLite(Context context){
+    public static void saveJsonToVmapCodeTB(Context context){
         try {
-            JSONArray jsonArray = parseJsonArray(context);
+            JSONArray jsonArray = parseJsonArrayWithVmapcode(context);
             for (int i = 0 ; i<=jsonArray.length(); i++){
                 JSONObject jb = jsonArray.getJSONObject(i);
                 String id = jb.getString("id");
@@ -197,7 +197,6 @@ public class SmartCodeLib {
         }
         //Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");
     }
-
     public static int countAllDataFromVmapCodeTable(Context context){
 
         db = SQLite.getInstance(context);
@@ -231,6 +230,65 @@ public class SmartCodeLib {
             count = true;
         }
         return count;
+    }
+
+    //geomettry table
+    private JSONArray parseJsonArrayWithGeometry(Context context) {
+        InputStream is = context.getResources().openRawResource(R.raw.geometry_min);
+        Writer writer = new StringWriter();
+        char[] buffer = new char[1024];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        json = writer.toString();
+        try {
+            jsonArray = new JSONArray(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //Log.e("jsonArr", jsonArray.toString());
+
+        return jsonArray;
+    }
+
+    private void saveJsonToGeometry(Context context){
+        try {
+            model_geometry_tbs = new ArrayList<>();
+            JSONArray jsonArray = parseJsonArrayWithGeometry(context);
+            for (int i = 0 ; i<=jsonArray.length(); i++){
+                JSONObject jb = jsonArray.getJSONObject(i);
+                String id = jb.getString("_id");
+                String code = jb.getString("code");
+                Boolean isDeleted = jb.getBoolean("isDeleted");
+                JSONObject geometry = jb.getJSONObject("geometry");
+                String type = geometry.getString("type");
+                JSONArray coordinates = geometry.getJSONArray("coordinates");
+                Log.e("code", code+"");
+                model_geometry_tbs.add(new Model_Geometry_tb(id, code, type, coordinates.toString(), isDeleted));
+
+
+
+                //Log.e("arr", array.toString()+"");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        db = SQLite.getInstance(context);
+        for (int i = model_geometry_tbs.size() -1; i>=0; --i){
+            Log.e("dataa", model_geometry_tbs.get(i).getId()+" "+model_geometry_tbs.get(i).getCode().toString()+"");
+
+        }
+
     }
 
 

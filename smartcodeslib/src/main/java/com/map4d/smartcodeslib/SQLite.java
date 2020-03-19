@@ -47,6 +47,22 @@ public class SQLite extends SQLiteOpenHelper {
             TEN_TINH + " TEXT " +
             ")";
 
+    //table geometry
+    private static final String TABLE_GEOMETRY = "Table_Geometry";
+    private static final String ID_G = "id";
+    private static final String IS_DELETED_G = "is_Deleted";
+    private static final String TYPE_G = "type";
+    private static final String COORDINATES_G = "coordinates";
+    private static final String CODE_G = "code";
+    private static final String CREATE_TABLE_GEOMETRY = "CREATE TABLE " + TABLE_GEOMETRY + " (" +
+            ID_G + " TEXT PRIMARY KEY NOT NULL, " +
+            CODE_G + " TEXT, " +
+            TYPE_G + " TEXT, " +
+            COORDINATES_G + " TEXT, " +
+            IS_DELETED + " BOOLEAN " +
+            ")";
+
+
     public SQLite(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
@@ -65,11 +81,14 @@ public class SQLite extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_COUNTRY);
+        db.execSQL(CREATE_TABLE_GEOMETRY);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_VMAPCODE);
+        onCreate(db);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GEOMETRY);
         onCreate(db);
     }
     //vmapCode Table
@@ -163,8 +182,73 @@ public class SQLite extends SQLiteOpenHelper {
     }
 
     //Geometry Table
+    //insert
+    public boolean insertDataToGeometryTB(Model_Geometry_tb data) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ID_G, data.getId());
+        values.put(CODE_G, data.getCode());
+        values.put(TYPE_G, data.getType());
+        values.put(COORDINATES_G, data.getCoordinates());
+        values.put(IS_DELETED_G, data.getDeleted());
+        long rowId = db.insert(TABLE_GEOMETRY, null, values);
+        db.close();
+        if (rowId != -1)
+            return true;
+        return false;
+    }
+    //count
+    public int getCountTotalLisGeometryTB() {
+        SQLiteDatabase db = getReadableDatabase();
+        String sql = "SELECT * FROM " + TABLE_GEOMETRY;
+        Cursor cursor = db.rawQuery(sql, null);
+        int totalRows = cursor.getCount();
+        cursor.close();
+        return totalRows;
+    }
+    //get data jsonArray
+    public JSONArray getALLDataFromGeometryTable() {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        SQLiteDatabase db = getReadableDatabase();
+        List<Model_Geometry_tb> words = new ArrayList<>();
+        String sql = "SELECT * FROM " + TABLE_GEOMETRY;
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                words.add(new Model_Geometry_tb(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.isNull(4)
+                ));
+            } while (cursor.moveToNext());
 
-
+            cursor.close();
+        }
+        for (int i = words.size() -1;i>=0;--i){
+            try {
+                jsonObject.put("id", words.get(i).getId());
+                jsonObject.put("code", words.get(i).getCode());
+                jsonObject.put("type", words.get(i).getType());
+                jsonObject.put("coordinates", words.get(i).getCoordinates());
+                jsonObject.put("isDeleted", words.get(i).getDeleted());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsonArray.put(jsonObject);
+        }
+        db.close();
+        return jsonArray;
+    }
+    //delete
+    public int deleteGeometryTable() {
+        SQLiteDatabase db = getReadableDatabase();
+        int rowEffect = db.delete(TABLE_GEOMETRY, null, null);
+        db.close();
+        return rowEffect;
+    }
 
 }
 

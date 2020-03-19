@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.map4d.smartcodeslib.SmartCodeLib;
 
 import org.json.JSONArray;
@@ -31,14 +32,16 @@ public class MainActivity extends AppCompatActivity {
     private String json;
     private JSONArray jsonArray;
     private List<Model_vmapCode_Json> model_vmapCode_jsons = new ArrayList<>();
+    private List<Model_geometry> model_geometries = new ArrayList<>();
     SQLite db;
+    private List<Model_Geometry_tb> model_geometry_tbs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        String jsonobject = saveJsonFileToLocal(MainActivity.this).toString();
+//        String jsonobject = parseJsonArray(MainActivity.this).toString();
 //        Log.e("json", jsonobject);
         //saveJsonToSQLite(MainActivity.this);
 //        if (db.getCountTotalListVmapCodeTB()!=0){
@@ -47,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
 //            saveJsonToSQLite(MainActivity.this);
 //        }
 
+        saveJsonToSQLite(MainActivity.this);
 
-        new saveJsonFileToLocal().execute();
+
+        //new saveJsonFileToLocal().execute();
 
     }
     class saveJsonFileToLocal extends AsyncTask<Void, Void, String> {
@@ -69,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            SmartCodeLib.saveJsonToSQLite(MainActivity.this);
+            SmartCodeLib.saveJsonToVmapCodeTB(MainActivity.this);
             return null;
         }
 
         @Override
         protected void onPostExecute(String result) {
-            Log.e("address",SmartCodeLib.getAllDataFromSQLite(MainActivity.this)+"");
+            Log.e("jsonARR",SmartCodeLib.getJsonArrayFromVmapCodeTable(MainActivity.this).toString());
             dialog.dismiss();
         }
     }
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private JSONArray parseJsonArray(Context context) {
-        InputStream is = context.getResources().openRawResource(R.raw.vmapcodejs);
+        InputStream is = context.getResources().openRawResource(R.raw.geometry_min);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
         try {
@@ -106,54 +111,39 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("jsonArr", jsonArray.toString());
+        //Log.e("jsonArr", jsonArray.toString());
 
         return jsonArray;
     }
 
     private void saveJsonToSQLite(Context context){
         try {
+            model_geometry_tbs = new ArrayList<>();
             JSONArray jsonArray = parseJsonArray(context);
             for (int i = 0 ; i<=jsonArray.length(); i++){
                 JSONObject jb = jsonArray.getJSONObject(i);
-                String id = jb.getString("id");
-                String address = jb.getString("address");
+                String id = jb.getString("_id");
                 String code = jb.getString("code");
-                String doiTuongGanMa = jb.getString("doiTuongGanMa");
-                String isDeleted = jb.getString("isDeleted");
-                Double latitude = jb.getDouble("latitude");
-                Double longitude = jb.getDouble("longitude");
-                String maBuuChinh = jb.getString("maBuuChinh");
-                String maHuyen = jb.getString("maHuyen");
-                String maTinh = jb.getString("maTinh");
-                String tenHuyen = jb.getString("tenHuyen");
-                String tenTinh = jb.getString("tenTinh");
-                Log.e("model_vmapcode1", code+"");
-                model_vmapCode_jsons.add(new Model_vmapCode_Json(id, address, code, doiTuongGanMa, isDeleted, latitude, longitude, maBuuChinh, maHuyen, maTinh, tenHuyen, tenTinh));
-                Log.e("model_vmapcode", model_vmapCode_jsons.get(i).getAddress()+"");
+                Boolean isDeleted = jb.getBoolean("isDeleted");
+                JSONObject geometry = jb.getJSONObject("geometry");
+                String type = geometry.getString("type");
+                JSONArray coordinates = geometry.getJSONArray("coordinates");
+                Log.e("code", code+"");
+                model_geometry_tbs.add(new Model_Geometry_tb(id, code, type, coordinates.toString(), isDeleted));
+
+
+
+                //Log.e("arr", array.toString()+"");
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
+        db = SQLite.getInstance(context);
+        for (int i = model_geometry_tbs.size() -1; i>=0; --i){
+            Log.e("dataa", model_geometry_tbs.get(i).getId()+" "+model_geometry_tbs.get(i).getCode().toString()+"");
 
-//        db = SQLite.getInstance(context);
-//        if (model_vmapCode_jsons!=null){
-//            for (int i = model_vmapCode_jsons.size() - 1; i>=0; --i){
-//                db.insertListBusStopTB(new Model_vmapCode_Json(
-//                        model_vmapCode_jsons.get(i).getId(),
-//                        model_vmapCode_jsons.get(i).getAddress(),
-//                        model_vmapCode_jsons.get(i).getCode(),
-//                        model_vmapCode_jsons.get(i).getDoiTuongGanMa(),
-//                        model_vmapCode_jsons.get(i).getDeleted(),
-//                        model_vmapCode_jsons.get(i).getLatitude(),
-//                        model_vmapCode_jsons.get(i).getLongitude(),
-//                        model_vmapCode_jsons.get(i).getMaBuuChinh(),
-//                        model_vmapCode_jsons.get(i).getMaHuyen(),
-//                        model_vmapCode_jsons.get(i).getMaTinh(),
-//                        model_vmapCode_jsons.get(i).getTenHuyen(),
-//                        model_vmapCode_jsons.get(i).getTenTinh()));
-//            }
-//        }
-//        Log.e("list_VmapCODE:", db.getCountTotalListVmapCodeTB()+"");
+        }
+
     }
 }

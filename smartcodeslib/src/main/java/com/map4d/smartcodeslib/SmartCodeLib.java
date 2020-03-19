@@ -259,7 +259,13 @@ public class SmartCodeLib {
 
         return jsonArray;
     }
-
+    public static int countAllDataFromGeometryTable(Context context){
+        db = SQLite.getInstance(context);
+        if (db.getCountTotalLisGeometryTB()!=0){
+            count =  db.getCountTotalLisGeometryTB();
+        }
+        return count;
+    }
     private void saveJsonToGeometry(Context context){
         try {
             model_geometry_tbs = new ArrayList<>();
@@ -274,9 +280,6 @@ public class SmartCodeLib {
                 JSONArray coordinates = geometry.getJSONArray("coordinates");
                 Log.e("code", code+"");
                 model_geometry_tbs.add(new Model_Geometry_tb(id, code, type, coordinates.toString(), isDeleted));
-
-
-
                 //Log.e("arr", array.toString()+"");
             }
 
@@ -284,11 +287,41 @@ public class SmartCodeLib {
             e.printStackTrace();
         }
         db = SQLite.getInstance(context);
-        for (int i = model_geometry_tbs.size() -1; i>=0; --i){
-            Log.e("dataa", model_geometry_tbs.get(i).getId()+" "+model_geometry_tbs.get(i).getCode().toString()+"");
-
+        if (db.getCountTotalLisGeometryTB()==0) {
+            Log.e("total", model_geometry_tbs.size()+"");
+            if (model_geometry_tbs != null) {
+                db = SQLite.getInstance(context);
+                for (int i = model_geometry_tbs.size() - 1; i >= 0; --i) {
+                    db.insertDataToGeometryTB(new Model_Geometry_tb(
+                            model_geometry_tbs.get(i).getId(),
+                            model_geometry_tbs.get(i).getCode(),
+                            model_geometry_tbs.get(i).getType(),
+                            model_geometry_tbs.get(i).getCoordinates(),
+                            model_geometry_tbs.get(i).getDeleted()));
+                }
+            }
+        }else{
+            Log.e("SQLite:", "Data exist!");
         }
 
+    }
+    public static JSONArray getJsonArrayFromGeometryTable(Context context) {
+        try {
+            db = SQLite.getInstance(context);
+            jsonObject = new JSONObject();
+            jsonArray = new JSONArray();
+            model_geometry_tbs = new ArrayList<>();
+            if (db.getCountTotalLisGeometryTB() != 0) {
+                //Log.d("dữ liệu", db.getCountTotalListVmapCodeTB() + "");
+                jsonArray = db.getALLDataFromGeometryTable();
+                Log.e("Dữ liệu bảng geometry", ""+jsonArray.toString());
+            } else {
+                Log.e("Dữ liệu bảng geometry", "nulll");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
     }
 
 
